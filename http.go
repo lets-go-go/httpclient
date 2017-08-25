@@ -43,3 +43,8 @@ func Delete(URL string) *Client {
 func Patch(URL string) *Client {
 	return New().To(http.MethodPatch, URL)
 }
+
+// Options  start a Options request conveniently.
+func Options(URL string) *Client {
+	return New().To(http.MethodOptions, URL)
+}
