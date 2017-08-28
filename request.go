@@ -8,8 +8,10 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"net/url"
 	"os"
+	"path"
 	"strings"
 	"time"
 )
@@ -368,6 +370,33 @@ func (c *Client) Text() (string, error) {
 	}
 
 	return c.res.Text()
+}
+
+// ToFile download file to local
+func (c *Client) ToFile(dir string) error {
+
+	if _, err := c.Execute(); err != nil {
+		return err
+	}
+
+	part := multipart.Part{Header: textproto.MIMEHeader(c.res.Header)}
+
+	fileName := part.FileName()
+	contentLength := c.res.Header.Get("Content-Length")
+
+	fmt.Printf("header=%+v\n", c.res.Header)
+	fmt.Printf("fileName=%+v, contentLength=%v\n", fileName, contentLength)
+
+	filePath := path.Join(dir, fileName)
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, c.res.Body)
+	return err
 }
 
 func (c *Client) assemble() error {
