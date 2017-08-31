@@ -14,6 +14,11 @@ func SetGlobalSetting(config *ClientSetting) {
 	}
 }
 
+// Access access url
+func Access(method, URL string) *Client {
+	return New().To(method, URL)
+}
+
 // Head start a Head request conveniently.
 func Head(URL string) *Client {
 	return New().To(http.MethodHead, URL)
