@@ -120,7 +120,7 @@ func testPostWithBody2() {
 func testDownload() {
 	// SetTimeout(5 * time.Second)
 	filePath := "d:/"
-	err := httpclient.Get("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png").ToFile(filePath)
+	err := httpclient.Get("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png").ToFile(filePath, "bd_logo1_31bdc765.png")
 
 	fmt.Printf("err:%+v", err)
 }
