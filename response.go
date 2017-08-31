@@ -78,6 +78,12 @@ func (r *Response) Raw() ([]byte, error) {
 	return b, nil
 }
 
+// ContentType returns the content-type of the response.
+func (r *Response) ContentType() string {
+
+	return r.Header.Get("Content-Type")
+}
+
 // Content returns the content of the response body, it will handle
 // the compression.
 func (r *Response) Content() ([]byte, error) {

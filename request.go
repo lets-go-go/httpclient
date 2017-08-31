@@ -139,10 +139,10 @@ var typesMap = map[string]string{
 // header to "text/html".
 func (c *Client) SetContentType(t string) *Client {
 	if typ, ok := typesMap[strings.TrimSpace(strings.ToLower(t))]; ok {
-		return c.SetHeader("ContentType", typ)
+		return c.SetHeader("Content-Type", typ)
 	}
 
-	return c.SetHeader("ContentType", t)
+	return c.SetHeader("Content-Type", t)
 }
 
 // Accept sets the "Accept" request header to the given value.
@@ -411,6 +411,15 @@ func (c *Client) ToFile(dir, fileName string) error {
 	if fileName == "" {
 		part := multipart.Part{Header: textproto.MIMEHeader(c.res.Header)}
 		fileName = part.FileName()
+
+		if fileName == "" {
+			if c.req.URL.Path == "" {
+				surfix := GetContentTypeSufix(c.res.ContentType())
+				fileName = fmt.Sprintf("%s.%s", time.Now().Format("20060102150405"), surfix)
+			} else {
+				fileName = path.Base(c.req.URL.Path)
+			}
+		}
 	}
 
 	contentLength := c.res.Header.Get("Content-Length")
