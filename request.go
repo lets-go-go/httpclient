@@ -204,9 +204,23 @@ func (c *Client) SendBody(body interface{}) *Client {
 	return c
 }
 
+// Cookies adds get cookie from the response.
+func (c *Client) Cookies() []*http.Cookie {
+	return c.res.Cookies()
+}
+
 // AddCookie adds the cookie to the request.
 func (c *Client) AddCookie(cookie *http.Cookie) *Client {
 	c.cookies = append(c.cookies, cookie)
+
+	return c
+}
+
+// SetCookies adds get cookie from the response.
+func (c *Client) SetCookies(cookies []*http.Cookie) *Client {
+	for _, cookie := range cookies {
+		c.AddCookie(cookie)
+	}
 
 	return c
 }
@@ -372,16 +386,33 @@ func (c *Client) Text() (string, error) {
 	return c.res.Text()
 }
 
+// Bytes sends the HTTP request and returns the reponse body with []byte format.
+func (c *Client) Bytes() ([]byte, error) {
+	if _, err := c.Execute(); err != nil {
+		return nil, err
+	}
+
+	return c.res.Content()
+}
+
+// Dump Dump request
+func (c *Client) Dump() error {
+	// c.res.Dump()
+	return nil
+}
+
 // ToFile download file to local
-func (c *Client) ToFile(dir string) error {
+func (c *Client) ToFile(dir, fileName string) error {
 
 	if _, err := c.Execute(); err != nil {
 		return err
 	}
 
-	part := multipart.Part{Header: textproto.MIMEHeader(c.res.Header)}
+	if fileName == "" {
+		part := multipart.Part{Header: textproto.MIMEHeader(c.res.Header)}
+		fileName = part.FileName()
+	}
 
-	fileName := part.FileName()
 	contentLength := c.res.Header.Get("Content-Length")
 
 	fmt.Printf("header=%+v\n", c.res.Header)
