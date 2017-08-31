@@ -79,6 +79,9 @@ func (c *ClientSetting) SetProto(proto string) *ClientSetting {
 func (c *ClientSetting) SetProxy(proxyType ProxyType, addr string) *ClientSetting {
 
 	if proxyType == NoProxy {
+		c.ProxyTransport = &http.Transport{
+			Proxy: nil,
+		}
 		return c
 	}
 

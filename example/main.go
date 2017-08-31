@@ -11,8 +11,12 @@ import (
 
 func main() {
 
-	httpclient.Settings().SetProxy(httpclient.CustomProxy, "http://192.168.16.189:8080")
-	testDownload()
+	// httpclient.Settings().SetProxy(httpclient.NoProxy, "")
+	// httpclient.Settings().SetProxy(httpclient.DefaultProxy, "")
+	// httpclient.Settings().SetProxy(httpclient.CustomProxy, "http://192.168.16.232:8080")
+	// testPostWithFiled()
+	//testDownload()
+	testGoogle()
 }
 
 func testPost() {
@@ -120,8 +124,18 @@ func testPostWithBody2() {
 func testDownload() {
 	// SetTimeout(5 * time.Second)
 	filePath := "d:/"
-	// url := "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png"
-	url := "http://www.focuschina.com"
+	url := "https://github.com/henrylee2cn/goutil/blob/master/pool/GoPool.go"
+
+	err := httpclient.Get(url).ToFile(filePath, "")
+
+	fmt.Printf("err:%+v", err)
+}
+
+func testGoogle() {
+	// SetTimeout(5 * time.Second)
+	filePath := "d:/"
+	url := "https://www.google.com"
+
 	err := httpclient.Get(url).ToFile(filePath, "")
 
 	fmt.Printf("err:%+v", err)

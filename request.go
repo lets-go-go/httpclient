@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"mime"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
@@ -413,11 +414,23 @@ func (c *Client) ToFile(dir, fileName string) error {
 		fileName = part.FileName()
 
 		if fileName == "" {
+			var surfix string
+			exts, _ := mime.ExtensionsByType(c.res.ContentType())
+
+			if len(exts) > 0 {
+				surfix = exts[0]
+			} else {
+				surfix = GetContentTypeSufix(c.res.ContentType())
+			}
+
 			if c.req.URL.Path == "" {
-				surfix := GetContentTypeSufix(c.res.ContentType())
-				fileName = fmt.Sprintf("%s.%s", time.Now().Format("20060102150405"), surfix)
+				fileName = time.Now().Format("20060102150405")
 			} else {
 				fileName = path.Base(c.req.URL.Path)
+			}
+
+			if surfix != "" && !strings.Contains(fileName, surfix) {
+				fileName = fmt.Sprintf("%s%s", fileName, surfix)
 			}
 		}
 	}
