@@ -16,7 +16,29 @@ func main() {
 	// httpclient.Settings().SetProxy(httpclient.CustomProxy, "http://192.168.16.232:8080")
 	// testPostWithFiled()
 	//testDownload()
-	testGoogle()
+	testPost1()
+}
+
+func testPost1() {
+
+	// v := url.Values{
+	// 	"scKey":          []string{"wx782c26e4c19acffb"},
+	// 	"currentVersion": []string{"2.0.0.0"},
+	// 	"fixVersion":     []string{"2.0.0.0"},
+	// }
+
+	b := map[string]string{
+		"scKey":          "wx782c26e4c19acffb",
+		"currentVersion": "2.0.0.0",
+		"fixVersion":     "2.0.0.0",
+	}
+
+	// b := []int{1, 2, 3}
+
+	body, _ := httpclient.Post("http://cloudcn.focusteach.com/pc/sc/equipnum/update").SendBody(b).Text()
+	fmt.Printf("body=%v\n", body)
+
+	fmt.Println("-------------------------------------")
 }
 
 func testPost() {

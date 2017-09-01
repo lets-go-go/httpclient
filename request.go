@@ -280,20 +280,35 @@ func (c *Client) AddFields(vals url.Values) *Client {
 	return c
 }
 
+// AddField sets the field values like form fields in HTML. Once it was set,
+// the "Content-Type" header of the request will be automatically set to
+// "application/x-www-form-urlencoded".
+func (c *Client) AddField(key, value string) *Client {
+
+	c.formVals.Add(key, value)
+
+	c.SetContentType("application/x-www-form-urlencoded")
+	return c
+}
+
 // AttachFile adds the attachment file to the form. Once the attachment was
 // set, the "Content-Type" will be set to "multipart/form-data; boundary=xxx"
 // automatically.
-func (c *Client) AttachFile(fieldname, path, filename string) *Client {
+func (c *Client) AttachFile(fieldname, filePath, filename string) *Client {
 	if c.body != nil {
 		c.err = ErrBodyAlreadySet
 		return c
 	}
 
-	file, err := os.Open(path)
+	file, err := os.Open(filePath)
 
 	if err != nil {
 		c.err = err
 		return c
+	}
+
+	if filename == "" {
+		filename = path.Base(filePath)
 	}
 
 	fw, err := c.mw.CreateFormFile(fieldname, filename)
