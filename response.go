@@ -126,7 +126,7 @@ func (r *Response) JSON(v ...interface{}) (interface{}, error) {
 	}
 
 	if !r.OK() {
-		return res, ErrStatusNotOk
+		return res, ErrStatusNotOk{statusCode: r.StatusCode}
 	}
 
 	return res, nil
@@ -141,7 +141,7 @@ func (r *Response) Text() (string, error) {
 	}
 
 	if !r.OK() {
-		return string(b), ErrStatusNotOk
+		return string(b), ErrStatusNotOk{statusCode: r.StatusCode}
 	}
 
 	return string(b), nil

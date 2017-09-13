@@ -23,8 +23,17 @@ var (
 	ErrLackURL        = errors.New("request: request lacks URL")
 	ErrLackMethod     = errors.New("request: request lacks method")
 	ErrBodyAlreadySet = errors.New("request: request body has already been set")
-	ErrStatusNotOk    = errors.New("request: status code is not ok (>= 400)")
+	// ErrStatusNotOk    = errors.New("request: status code is not ok (>= 400)")
 )
+
+// ErrStatusNotOk ErrStatusNotOk
+type ErrStatusNotOk struct {
+	statusCode int
+}
+
+func (e ErrStatusNotOk) Error() string {
+	return fmt.Sprintf("request: status code is not ok (>= 400).code=%d", e.statusCode)
+}
 
 type maxRedirects int
 
@@ -168,8 +177,14 @@ func (c *Client) Accept(t string) *Client {
 	return c.SetHeader("Accept", t)
 }
 
-// Query adds the the given value to request's URL query-string.
-func (c *Client) Query(vals url.Values) *Client {
+// AddQuery adds the the given value to request's URL query-string.
+func (c *Client) AddQuery(k, v string) *Client {
+	c.queryVals.Add(k, v)
+	return c
+}
+
+// SetQuery adds the the given value to request's URL query-string.
+func (c *Client) SetQuery(vals url.Values) *Client {
 	for k, vs := range vals {
 		for _, v := range vs {
 			c.queryVals.Add(k, v)
@@ -287,7 +302,7 @@ func (c *Client) AddField(key, value string) *Client {
 
 	c.formVals.Add(key, value)
 
-	c.SetContentType("application/x-www-form-urlencoded")
+	// c.SetContentType("application/x-www-form-urlencoded")
 	return c
 }
 
