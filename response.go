@@ -99,7 +99,7 @@ func (r *Response) Content() ([]byte, error) {
 	return b, nil
 }
 
-// JSON returns the reponse body with JSON format.
+// JSON returns the response body with JSON format.
 func (r *Response) JSON(v ...interface{}) (interface{}, error) {
 	b, err := r.Content()
 	if err != nil {
@@ -132,7 +132,7 @@ func (r *Response) JSON(v ...interface{}) (interface{}, error) {
 	return res, nil
 }
 
-// Text returns the reponse body with text format.
+// Text returns the response body with text format.
 func (r *Response) Text() (string, error) {
 	b, err := r.Content()
 
@@ -172,7 +172,7 @@ func (r *Response) Reason() string {
 	return http.StatusText(r.StatusCode)
 }
 
-// OK returns whether the reponse status code is less than 400.
+// OK returns whether the response status code is less than 400.
 func (r *Response) OK() bool {
 	return r.StatusCode < 400
 }

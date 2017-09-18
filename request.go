@@ -378,7 +378,7 @@ func (c *Client) AttachFileRange(fieldname, filePath, filename string, start, le
 	return c
 }
 
-// Execute sends the HTTP request and returns the HTTP reponse.
+// Execute sends the HTTP request and returns the HTTP response.
 //
 // An error is returned if caused by client policy (such as timeout), or
 // failure to speak HTTP (such as a network connectivity problem), or generated
@@ -436,7 +436,7 @@ func (c *Client) Req() (*http.Request, error) {
 	return c.req, nil
 }
 
-// JSON sends the HTTP request and returns the reponse body with JSON format.
+// JSON sends the HTTP request and returns the response body with JSON format.
 func (c *Client) JSON(v ...interface{}) (interface{}, error) {
 	if _, err := c.Execute(); err != nil {
 		return nil, err
@@ -445,7 +445,7 @@ func (c *Client) JSON(v ...interface{}) (interface{}, error) {
 	return c.res.JSON(v...)
 }
 
-// Text sends the HTTP request and returns the reponse body with text format.
+// Text sends the HTTP request and returns the response body with text format.
 func (c *Client) Text() (string, error) {
 	if _, err := c.Execute(); err != nil {
 		return "", err
@@ -454,7 +454,7 @@ func (c *Client) Text() (string, error) {
 	return c.res.Text()
 }
 
-// Bytes sends the HTTP request and returns the reponse body with []byte format.
+// Bytes sends the HTTP request and returns the response body with []byte format.
 func (c *Client) Bytes() ([]byte, error) {
 	if _, err := c.Execute(); err != nil {
 		return nil, err
