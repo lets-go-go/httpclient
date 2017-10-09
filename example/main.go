@@ -15,17 +15,18 @@ func main() {
 	// httpclient.Settings().SetProxy(httpclient.DefaultProxy, "")
 	// httpclient.Settings().SetProxy(httpclient.CustomProxy, "http://192.168.16.232:8080")
 	// testPostWithFiled()
-	//testDownload()
-	testPost1()
+	testDownload()
+	// testPost()
+	// testGoogle()
 }
 
 func testPost1() {
 
-	// v := url.Values{
-	// 	"scKey":          []string{"wx782c26e4c19acffb"},
-	// 	"currentVersion": []string{"2.0.0.0"},
-	// 	"fixVersion":     []string{"2.0.0.0"},
-	// }
+	v := url.Values{
+		"scKey":          []string{"wx782c26e4c19acffb"},
+		"currentVersion": []string{"2.0.0.0"},
+		"fixVersion":     []string{"2.0.0.0"},
+	}
 
 	b := map[string]string{
 		"scKey":          "wx782c26e4c19acffb",
@@ -35,8 +36,11 @@ func testPost1() {
 
 	// b := []int{1, 2, 3}
 
-	body, _ := httpclient.Post("http://cloudcn.focusteach.com/pc/sc/equipnum/update").SendBody(b).Text()
-	fmt.Printf("body=%v\n", body)
+	if body, err := httpclient.Post("http://cloudcn.focusteach.com/pc/sc/equipnum/update", 3*time.Second).SendBody(b).Text(); err != nil {
+		fmt.Printf("err=%v\n", err)
+	} else {
+		fmt.Printf("body=%v\n", body)
+	}
 
 	fmt.Println("-------------------------------------")
 }
@@ -52,7 +56,7 @@ func testPost() {
 
 	// b := []int{1, 2, 3}
 
-	body, _ := httpclient.Post("http://httpbin.org/post").AddFields(v).AttachFile("file1", "d:/1.jpg", "1.jpg").Text()
+	body, _ := httpclient.Post("http://httpbin.org/post", 3*time.Second).AddFields(v).AttachFile("file1", "d:/1.jpg", "1.jpg").Text()
 	fmt.Printf("body=%v\n", body)
 
 	fmt.Println("-------------------------------------")
@@ -60,14 +64,14 @@ func testPost() {
 
 func testGet() {
 
-	rsp, _ := httpclient.Head("http://httpbin.org/get").Execute()
+	rsp, _ := httpclient.Head("http://httpbin.org/get", 3*time.Second).Execute()
 
 	fmt.Printf("body=%+v\n", rsp.Header)
 	fmt.Println("-------------------------------------")
 }
 
 func testHead() {
-	rsp, _ := httpclient.Options("http://httpbin.org/get").Execute()
+	rsp, _ := httpclient.Options("http://httpbin.org/get", 3*time.Second).Execute()
 
 	fmt.Printf("body=%+v\n", rsp.Header)
 	fmt.Println("-------------------------------------")
@@ -75,7 +79,7 @@ func testHead() {
 
 func testGetBody() {
 
-	body, _ := httpclient.Get("http://httpbin.org/get").Text()
+	body, _ := httpclient.Get("http://httpbin.org/get", 3*time.Second).Text()
 	fmt.Printf("body=%v\n", body)
 
 	fmt.Println("-------------------------------------")
@@ -92,28 +96,28 @@ func testPostWithBody() {
 
 	b := []int{1, 2, 3}
 
-	body, _ := httpclient.Post("http://httpbin.org/post").SendBody(b).Text()
+	body, _ := httpclient.Post("http://httpbin.org/post", 3*time.Second).SendBody(b).Text()
 	fmt.Printf("body=%v\n", body)
 
 	fmt.Println("-------------------------------------")
 }
 
 func testPut() {
-	rsp, _ := httpclient.Put("http://httpbin.org/put").Text()
+	rsp, _ := httpclient.Put("http://httpbin.org/put", 3*time.Second).Text()
 
 	fmt.Printf("body=%+v\n", rsp)
 	fmt.Println("-------------------------------------")
 }
 
 func testDelete() {
-	rsp, _ := httpclient.Delete("http://httpbin.org/delete").Text()
+	rsp, _ := httpclient.Delete("http://httpbin.org/delete", 3*time.Second).Text()
 
 	fmt.Printf("body=%+v\n", rsp)
 	fmt.Println("-------------------------------------")
 }
 
 func testPatch() {
-	rsp, _ := httpclient.Patch("http://httpbin.org/patch").Text()
+	rsp, _ := httpclient.Patch("http://httpbin.org/patch", 3*time.Second).Text()
 
 	fmt.Printf("body=%+v\n", rsp)
 	fmt.Println("-------------------------------------")
@@ -128,7 +132,7 @@ func testPostWithFiled() {
 		"_":     []string{strconv.FormatInt(time.Now().Unix(), 10)},
 	}
 
-	body, _ := httpclient.Post("https://login.weixin.qq.com/jslogin").AddFields(v).Text()
+	body, _ := httpclient.Post("https://login.weixin.qq.com/jslogin", 3*time.Second).AddFields(v).Text()
 	fmt.Printf("body=\n%v", body)
 }
 
@@ -139,26 +143,24 @@ func testPostWithBody2() {
 		"lang":  "zh_CN",
 		"_":     "1501747870",
 	}
-	body, _ := httpclient.Post("https://login.weixin.qq.com/jslogin").SendBody(b).Text()
+	body, _ := httpclient.Post("https://login.weixin.qq.com/jslogin", 3*time.Second).SendBody(b).Text()
 	fmt.Printf("body=%v", body)
 }
 
 func testDownload() {
-	// SetTimeout(5 * time.Second)
 	filePath := "d:/"
 	url := "https://github.com/henrylee2cn/goutil/blob/master/pool/GoPool.go"
 
-	err := httpclient.Get(url).ToFile(filePath, "")
+	err := httpclient.Get(url, 0).ToFile(filePath, "")
 
 	fmt.Printf("err:%+v", err)
 }
 
 func testGoogle() {
-	// SetTimeout(5 * time.Second)
 	filePath := "d:/"
 	url := "https://www.google.com"
 
-	err := httpclient.Get(url).ToFile(filePath, "")
+	err := httpclient.Get(url, 10*time.Second).ToFile(filePath, "")
 
 	fmt.Printf("err:%+v", err)
 }

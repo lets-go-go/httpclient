@@ -50,6 +50,7 @@ func Settings() *ClientSetting {
 			ProtoMajor: 1,
 			ProtoMinor: 1,
 			proxyType:  NoProxy,
+			Timeout:    3 * time.Second,
 		}
 	}
 
