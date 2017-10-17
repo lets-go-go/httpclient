@@ -9,6 +9,7 @@ import (
 	"mime"
 	"mime/multipart"
 	"net/http"
+	"net/http/httputil"
 	"net/textproto"
 	"net/url"
 	"os"
@@ -436,6 +437,16 @@ func (c *Client) Req() (*http.Request, error) {
 	return c.req, nil
 }
 
+// DumpRequest DumpRequest
+func (c *Client) DumpRequest() ([]byte, error) {
+	return httputil.DumpRequest(c.req, true)
+}
+
+// DumpResponse DumpResponse
+func (c *Client) DumpResponse() ([]byte, error) {
+	return httputil.DumpResponse(c.res.Response, true)
+}
+
 // JSON sends the HTTP request and returns the response body with JSON format.
 func (c *Client) JSON(v ...interface{}) (interface{}, error) {
 	if _, err := c.Execute(); err != nil {
@@ -570,4 +581,9 @@ func (c *Client) assemble() error {
 	}
 
 	return nil
+}
+
+// URLString returns the url string
+func (c Client) URLString() string {
+	return c.url.String()
 }

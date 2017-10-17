@@ -14,19 +14,19 @@ func main() {
 	// httpclient.Settings().SetProxy(httpclient.NoProxy, "")
 	// httpclient.Settings().SetProxy(httpclient.DefaultProxy, "")
 	// httpclient.Settings().SetProxy(httpclient.CustomProxy, "http://192.168.16.232:8080")
-	// testPostWithFiled()
-	testDownload()
+	testPostWithFiled()
+	// testDownload()
 	// testPost()
 	// testGoogle()
 }
 
 func testPost1() {
 
-	v := url.Values{
-		"scKey":          []string{"wx782c26e4c19acffb"},
-		"currentVersion": []string{"2.0.0.0"},
-		"fixVersion":     []string{"2.0.0.0"},
-	}
+	// v := url.Values{
+	// 	"scKey":          []string{"wx782c26e4c19acffb"},
+	// 	"currentVersion": []string{"2.0.0.0"},
+	// 	"fixVersion":     []string{"2.0.0.0"},
+	// }
 
 	b := map[string]string{
 		"scKey":          "wx782c26e4c19acffb",
@@ -132,8 +132,14 @@ func testPostWithFiled() {
 		"_":     []string{strconv.FormatInt(time.Now().Unix(), 10)},
 	}
 
-	body, _ := httpclient.Post("https://login.weixin.qq.com/jslogin", 3*time.Second).AddFields(v).Text()
-	fmt.Printf("body=\n%v", body)
+	c := httpclient.Post("https://login.weixin.qq.com/jslogin", 3*time.Second).AddFields(v)
+	body, _ := c.Execute()
+	fmt.Printf("body=%v\n", body)
+	dmp, err := c.DumpRequest()
+	fmt.Printf("dmp req=%v,err=%v\n", string(dmp), err)
+
+	dmp, err = c.DumpResponse()
+	fmt.Printf("dmp rsp=%v,err=%v\n", string(dmp), err)
 }
 
 func testPostWithBody2() {
